@@ -23,6 +23,8 @@ See more details at https://x12.org/.
       - [Loop/Segment Matcher Predicate](#loopsegment-matcher-predicate)
       - [Loop schema could be decorated with segment schemas](#loop-schema-could-be-decorated-with-segment-schemas)
     - [2. Parse](#2-parse)
+      - [Loop Operations](#loop-operations)
+      - [Segment Operations](#segment-operations)
     - [3. Optional: Analyze parsed loop.](#3-optional-analyze-parsed-loop)
   - [Contributing](#contributing)
   - [License](#license)
@@ -129,7 +131,6 @@ This is useful of [Analyze parsed loop](#3-optional-analyze-parsed-loop).
 
 Example:
 ```py
-
 from x12.schema.schema import Segment
 
 gs.add_child('ST', Usage.REQUIRED, by_segment_element('ST', 1, ['835'])).with_segments([
@@ -145,7 +146,95 @@ gs.add_child('ST', Usage.REQUIRED, by_segment_element('ST', 1, ['835'])).with_se
 
 
 ### 2. Parse
+
+```py
+from x12.schema.schema import Schema, Usage
+from x12.parser.parse import parse
+
+# Real schema here
+schema = Schema("X12")
+
+loop = parse(filepath_to_x12_file, schema)
+```
+
+**Note**: if the x12 file does use the standard segment, element and composite separators, you can provide custom definition:
+
+```py
+from x12.parser.context import Context
+
+loop = parse(filepath_to_x12_file, schema, Context("~", "*", ":"))
+```
+
+#### Loop Operations
+
+**Serialization:**
+Loop could be serialized to:
+- XML: ```loop.to_xml()```
+- original x12 format ```str(loop)```
+- Debug view: ```loop.to_debug()```. This provides visual distinction for loops and segments.
+    ![debug view](https://user-images.githubusercontent.com/1224609/223806918-b1e30dc6-bb5d-4492-a8f7-4cc7d33700ab.jpg)
+
+**Find Child Loops:**
+```py
+# find loop by loop schema name
+
+# Non recursive, search only within loop's direct children loops
+loops = loop.find_loops("ST")
+
+# Recursive, find loops anywhere in the downstream tree structure.
+loops = loop.find_loops("NM1", True)
+```
+
+**Find Segments:**
+```py
+# find segment by segment ID
+
+# Non recursive, search only within loop's segments
+segments = loop.find_segments("ST")
+
+# Recursive, find segments anywhere in the downstream tree structure.
+segments = loop.find_segments("NM1", True)
+```
+
+**Other operations:**
+- To access loop parent: ```loop.parent```
+- Direct access to children loops: ```loop.loops```
+- Direct access to segments: ```loop.segments```
+
+#### Segment Operations
+
+**Serialization:**
+Segment could be serialized to:
+- XML: ```segment.to_xml()```
+- original x12 format ```str(segment)```
+- Debug view: ```segment.to_debug()```. This provides visual distinction for segments.
+    ![debug view](https://user-images.githubusercontent.com/1224609/223809367-518981df-164e-4a8d-b3bd-5a7185e26178.jpg)
+
+**Access segment elements**
+```segment.elements```
+
 ### 3. Optional: Analyze parsed loop.
+This is an optional step to analyze the parsed document to see missing and unexpected loops/segments based on the schema.
+
+```py
+from x12.schema.schema import Schema, Usage
+from x12.parser.parse import parse
+from x12.parser.analyze import analyze
+
+# Real schema here
+schema = Schema("X12")
+
+loop = parse(filepath_to_x12_file, schema)
+
+print(analyze(loop))
+```
+
+**Example:**
+
+![analyze](https://user-images.githubusercontent.com/1224609/223810446-b3371fe5-5d41-4d2e-ba24-2245edb8f1d2.jpg)
+- Red indicates missing loops / segments.
+- Yellow indicates unexpected segments.
+
 
 ---
 
