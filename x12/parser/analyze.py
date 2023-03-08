@@ -12,7 +12,7 @@ def find_matching_segment_schema(segment: Segment, schema: Schema, offset: int) 
     """Find position and matching segment schema."""
 
     for index, segment_schema in enumerate(schema.segments[offset:], offset):
-        if segment_schema.predicate(segment.elements):
+        if segment_schema.matches(segment.elements):
             return (index, segment_schema)
 
     return None
@@ -27,6 +27,8 @@ class Occurrence(Enum):
 
 
 class SegmentProbe(object):
+    """Segment probe handling printing of the segment/schema subject."""
+
     def __init__(self, occurrence: Occurrence, subject: Segment | SegmentSchema) -> None:
         self.occurrence = occurrence
         self.segment = subject if isinstance(subject, Segment) else None
@@ -61,7 +63,7 @@ def analyze(loop: Loop) -> str:
             if found:
                 at_index, segment_schema = found
                 for missing_schema in loop.schema.segments[index:at_index]:
-                    if (missing_schema.usage == Usage.REQUIRED):
+                    if missing_schema.usage == Usage.REQUIRED:
                         segment_res.append(SegmentProbe(
                             Occurrence.MISSING, missing_schema))
 

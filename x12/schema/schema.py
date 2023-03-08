@@ -24,7 +24,10 @@ def by_segment(segment_id: str) -> Predicate:
 def by_segment_element(segment_id: str, element_index: int, element_value: list[str]) -> Predicate:
     """Loop/segment predicate by segment ID and element value(s) at given element index."""
 
-    return lambda tokens: by_segment(segment_id)(tokens) and len(tokens) > element_index and tokens[element_index] in element_value
+    return lambda tokens: \
+        by_segment(segment_id)(tokens) and \
+        len(tokens) > element_index and \
+        tokens[element_index] in element_value
 
 
 class Segment:
@@ -35,11 +38,23 @@ class Segment:
         self.predicate = predicate
         self.unique = unique
 
+    def matches(self, tokens: list[str]) -> bool:
+        """Does the loop matches given the segment elements (tokens)."""
+
+        return self.predicate(tokens)
+
+    def __str__(self) -> str:
+        return f"{self.name} ({self.usage.name}, unique: {self.unique})"
+
 
 class Schema:
     """X12 Loop schema"""
 
-    def __init__(self, loop_name: str, usage: Usage = Usage.REQUIRED, predicate: Predicate = None) -> None:
+    def __init__(
+        self, loop_name: str,
+        usage: Usage = Usage.REQUIRED,
+        predicate: Predicate = None
+    ) -> None:
         self.loop_name = loop_name
         self.usage = usage
         self.predicate = predicate
@@ -71,7 +86,9 @@ class Schema:
 
     def __str__(self) -> str:
         res = f"{'|  '*self.depth}+--{self.loop_name}"
-        res += f" ({', '.join(segment.name for segment in self.segments)})" if len(self.segments) > 0 else ""
+        res += f" ({', '.join(segment.name for segment in self.segments)})" \
+            if len(self.segments) > 0 else ""
+
         res += "\n"
         res += "".join(str(child) for child in self.children)
         return res
