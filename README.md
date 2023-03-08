@@ -1,17 +1,33 @@
 # Space Avocado X12 Parser
 A simple X12 file parser, allowing to parse X12 loops and segment based on schema.
 
+*Credit: Inspired by [Maven Central X12 Parser](https://github.com/ryanco/x12-parser).*
+
 > X12 is a message formatting standard used with Electronic Data Interchange (EDI) documents for trading partners to share electronic business documents in an agreed-upon and standard format. It is the most common EDI standard used in the United States.
+
+**X12 Document List**: https://en.wikipedia.org/wiki/X12_Document_List
+
+**X12 Schematic:**
+
+![X12-Schematic](https://user-images.githubusercontent.com/1224609/223794653-9b3abcfe-cb6b-4bd5-aec6-14f07e9280e4.gif)
 
 See more details at https://x12.org/.
 
-### X12 Document List
-https://en.wikipedia.org/wiki/X12_Document_List
+---
 
-*Credit: Inspired by [Maven Central X12 Parser](https://github.com/ryanco/x12-parser).*
+**Table of Content**
+- [Space Avocado X12 Parser](#space-avocado-x12-parser)
+  - [Installation](#installation)
+  - [How to use](#how-to-use)
+    - [1. Define a schema for the x12 file to be parsed.](#1-define-a-schema-for-the-x12-file-to-be-parsed)
+      - [Loop/Segment Matcher Predicate](#loopsegment-matcher-predicate)
+      - [Loop schema could be decorated with segment schemas](#loop-schema-could-be-decorated-with-segment-schemas)
+    - [2. Parse](#2-parse)
+    - [3. Optional: Analyze parsed loop.](#3-optional-analyze-parsed-loop)
+  - [Contributing](#contributing)
+  - [License](#license)
 
-### X12 Schematic
-![X12-Schematic](https://user-images.githubusercontent.com/1224609/223794653-9b3abcfe-cb6b-4bd5-aec6-14f07e9280e4.gif)
+---
 
 ## Installation
 
@@ -130,3 +146,13 @@ gs.add_child('ST', Usage.REQUIRED, by_segment_element('ST', 1, ['835'])).with_se
 
 ### 2. Parse
 ### 3. Optional: Analyze parsed loop.
+
+---
+
+## Contributing
+
+See [contributing.md](contributing.md).
+
+## License
+
+Illogical is released under the MIT license. See [LICENSE.md](LICENSE.md).
