@@ -8,7 +8,11 @@ from x12.parser.segment import Segment
 from x12.schema.schema import Schema, Segment as SegmentSchema, Usage
 
 
-def find_matching_segment_schema(segment: Segment, schema: Schema, offset: int) -> Tuple[int, Segment] | None:
+def find_matching_segment_schema(
+    segment: Segment,
+    schema: Schema,
+    offset: int
+) -> Tuple[int, Segment] | None:
     """Find position and matching segment schema."""
 
     for index, segment_schema in enumerate(schema.segments[offset:], offset):
@@ -26,7 +30,8 @@ class Occurrence(Enum):
     MISSING = 2
 
 
-class SegmentProbe(object):
+class SegmentProbe:
+    # pylint: disable=too-few-public-methods
     """Segment probe handling printing of the segment/schema subject."""
 
     def __init__(self, occurrence: Occurrence, subject: Segment | SegmentSchema) -> None:
@@ -37,14 +42,15 @@ class SegmentProbe(object):
     def __str__(self) -> str:
         def print_segment(segment: Segment, highlight: Callable[[str], str] = lambda x: x) -> str:
             separator = segment.context.element_separator
-            return f"{highlight(segment.elements[0])}{separator}" + separator.join(element for element in segment.elements[1:])
+            return f"{highlight(segment.elements[0])}{separator}" + \
+                separator.join(element for element in segment.elements[1:])
 
         if self.occurrence == Occurrence.EXPECTED:
             return print_segment(self.segment, color_green)
-        elif self.occurrence == Occurrence.MISSING:
+        if self.occurrence == Occurrence.MISSING:
             return f"{color_red(self.schema.name)}"
-        else:
-            return print_segment(self.segment, color_yellow)
+
+        return print_segment(self.segment, color_yellow)
 
 
 def analyze(loop: Loop) -> str:
@@ -73,8 +79,11 @@ def analyze(loop: Loop) -> str:
                 segment_res.append(SegmentProbe(
                     Occurrence.UNEXPECTED, segment))
 
-        segment_res += [SegmentProbe(Occurrence.MISSING, segment_schema)
-                        for segment_schema in loop.schema.segments[index:] if segment_schema.usage == Usage.REQUIRED]
+        segment_res += [
+            SegmentProbe(Occurrence.MISSING, segment_schema)
+                for segment_schema in loop.schema.segments[index:]
+                if segment_schema.usage == Usage.REQUIRED
+        ]
 
         for probe in segment_res:
             res += "\n" + '  '*(loop.depth+1) + str(probe)

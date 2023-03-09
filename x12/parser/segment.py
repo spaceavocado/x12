@@ -3,7 +3,7 @@
 from x12.common.colors import color_cyan
 from x12.parser.context import Context
 
-class Segment(object):
+class Segment:
     """X12 Loop Segment object."""
 
     def __init__(self, context: Context) -> None:
@@ -15,7 +15,7 @@ class Segment(object):
 
         self.elements = segment.split(self.context.element_separator)
         return self
-        
+
     def to_xml(self, depth: int = 0) -> str:
         """Serialize segment into XML."""
 
@@ -30,12 +30,12 @@ class Segment(object):
         res += f"{'  '*depth}</{self.elements[0]}>\n"
         return res
 
-        
+
     def __str__(self) -> str:
         return self.context.element_separator.join(element for element in self.elements) + \
             self.context.segment_separator
 
-   
+
     def to_debug(self) -> str:
         """A helper tool to serialize segment into segment line with highlighted segment id."""
 

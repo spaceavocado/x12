@@ -4,13 +4,13 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spaceavocado-x12"
-version = "0.0.1"
+version = "1.0.0"
 description = "Simple X12 files parser."
 readme = "README.md"
 authors = [{ name = "David Horak", email = "info@davidhorak.com" }]
 license = { file = "LICENSE.md", content-type="text/markdown" }
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    "Development Status :: 4 - Beta",
     "Topic :: Utilities",
     "Programming Language :: Python",
     "Programming Language :: Python :: 3",

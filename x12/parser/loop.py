@@ -24,15 +24,15 @@ class Loop:
         child.parent = self
         self.loops.append(child)
         return child
-   
+
     def add_segment(self, segment: str):
         """Add a segment of a given x12 segment schema."""
-       
+
         child = Segment(self.context)
         child.add_elements(segment)
         self.segments.append(child)
         return self
-    
+
     def find_loops(self, name: str, recursive: bool = False):
         """Find child loops by loop schema name."""
 
@@ -55,21 +55,21 @@ class Loop:
             for loop in self.loops:
                 res += loop.find_segments(name, recursive)
         return res
-    
+
     def to_xml(self) -> str:
         """Serialize loop into XML."""
-        
 
         res = f'{"  "*self.depth}<LOOP NAME="{self.schema.loop_name}">\n'
         res += "".join(segment.to_xml(self.depth) for segment in self.segments)
         res += "".join(loop.to_xml() for loop in self.loops)
         res += f"{'  '*self.depth}</LOOP>\n"
         return res
-    
+
     def __str__(self) -> str:
-        return "\n".join([str(segment) for segment in self.segments] + \
-            [str(loop) for loop in self.loops])
-    
+        return "\n".join(
+            [str(segment) for segment in self.segments] + [str(loop) for loop in self.loops]
+        )
+
     def to_debug(self) -> str:
         """A helper tool to serialize loop with segment lines with highlighted segment id."""
 
