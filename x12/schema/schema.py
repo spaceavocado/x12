@@ -7,9 +7,14 @@ from typing import Callable
 class Usage(Enum):
     """Loop/Segment usage."""
 
+    # Data element must be submitted for the data type and must not be blank.
     REQUIRED = 0
+    # This element is not required and may be blank, however, if submitted, it will be edited.
     OPTIONAL = 1
+    # Required based upon values of other elements.
     SITUATIONAL = 2
+    # Not required, not edited, not collected. If submitted it will be ignored.
+    NON_NEEDED = 3
 
 # Loop/segment match predicate.
 # I.e. for given segment tokens (list[str]) determine if matches or not.
@@ -44,7 +49,7 @@ class Segment:
         return self.predicate(tokens)
 
     def __str__(self) -> str:
-        return f"{self.name} ({self.usage.name}, unique: {self.unique})"
+        return self.name
 
 
 class Schema:
@@ -72,11 +77,11 @@ class Schema:
         self.children.append(child)
         return child
 
-    def with_segments(self, segments: list[Segment]):
+    def with_segments(self, *segments: list[Segment]):
         """Add loop's segment schemas."""
 
-        for child in segments:
-            self.segments.append(child)
+        for segment in segments:
+            self.segments.append(segment)
         return self
 
     def matches(self, tokens: list[str]) -> bool:
@@ -86,7 +91,7 @@ class Schema:
 
     def __str__(self) -> str:
         res = f"{'|  '*self.depth}+--{self.loop_name}"
-        res += f" ({', '.join(segment.name for segment in self.segments)})" \
+        res += f" ({', '.join(str(segment) for segment in self.segments)})" \
             if len(self.segments) > 0 else ""
 
         res += "\n"

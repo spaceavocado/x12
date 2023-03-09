@@ -133,13 +133,13 @@ Example:
 ```py
 from x12.schema.schema import Segment
 
-gs.add_child('ST', Usage.REQUIRED, by_segment_element('ST', 1, ['835'])).with_segments([
+gs.add_child('ST', Usage.REQUIRED, by_segment_element('ST', 1, ['835'])).with_segments(
     Segment('ST', Usage.REQUIRED, by_segment('ST')),
     Segment('BPR', Usage.REQUIRED, by_segment('BPR')),
     Segment('TRN', Usage.REQUIRED, by_segment('TRN')),
     Segment('REF', Usage.REQUIRED, by_segment('REF')),
     Segment('DTM', Usage.REQUIRED, by_segment('DTM'))
-])
+)
 ```
 - Uses the same Usage and predicates as **Loop** schema.
 - The segment schemas are in sequential order of anticipated segments within the given loop.
@@ -240,8 +240,9 @@ print(analyze(loop))
 
 ## Contributing
 
-See [contributing.md](contributing.md).
+See [contributing.md](https://github.com/spaceavocado/x12/blob/master/contributing.md).
 
 ## License
 
-Illogical is released under the MIT license. See [LICENSE.md](LICENSE.md).
+Space Avocado X12 Parser is released under the MIT license. See [LICENSE.md]([LICENSE.md](https://github.com/spaceavocado/x12/blob/master/LICENSE.md)).
+

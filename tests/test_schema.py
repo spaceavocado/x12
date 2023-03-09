@@ -39,7 +39,7 @@ class TestSchema(unittest.TestCase):
     def test_with_segments(self):
         root = Schema("root", Usage.REQUIRED)
         segment = Segment("SEGMENT", Usage.REQUIRED, lambda: True)
-        root.with_segments([segment])
+        root.with_segments(segment)
         
         self.assertEqual(root.segments, [segment])
 
@@ -56,7 +56,7 @@ class TestSchema(unittest.TestCase):
         tests = [
             (Schema("root", Usage.REQUIRED), "+--root\n"),
             (
-                Schema("root", Usage.REQUIRED).with_segments([segment_1, segment_2]),
+                Schema("root", Usage.REQUIRED).with_segments(segment_1, segment_2),
                 "+--root (S1, S2)\n"
             ),
             (

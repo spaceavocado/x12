@@ -13,11 +13,11 @@ unittest.util._MAX_LENGTH=2000
 class TestAnalyze(unittest.TestCase): 
     def test_find_matching_segment_schema(self):
         ctx = Context("~", "*", ":")
-        schema = Schema("schema", Usage.REQUIRED).with_segments([
+        schema = Schema("schema", Usage.REQUIRED).with_segments(
             SegmentSchema("SEG_1", Usage.REQUIRED, lambda tokens: tokens[0] == "SEG_1"),
             SegmentSchema("SEG_2", Usage.REQUIRED, lambda tokens: tokens[0] == "SEG_2"),
             SegmentSchema("SEG_3", Usage.REQUIRED, lambda tokens: tokens[0] == "SEG_3"),
-        ])
+        )
         
         tests = [
             (Segment(ctx).add_elements("bogus"), 0, None),
@@ -63,8 +63,8 @@ class TestSegment_Probe(unittest.TestCase):
         segment_6 = SegmentSchema("SG6", Usage.OPTIONAL, lambda tokens: tokens[0] == "SG6", False)
         
         root = Schema("X12", Usage.REQUIRED)
-        loop_1 = root.add_child("LOOP_1", Usage.REQUIRED, lambda tokens: tokens[0] == "SG1").with_segments([segment_1, segment_2, segment_3, segment_4])
-        loop_3 = root.add_child("LOOP_3", Usage.REQUIRED, lambda tokens: tokens[0] == "SG5").with_segments([segment_5, segment_6])
+        loop_1 = root.add_child("LOOP_1", Usage.REQUIRED, lambda tokens: tokens[0] == "SG1").with_segments(segment_1, segment_2, segment_3, segment_4)
+        loop_3 = root.add_child("LOOP_3", Usage.REQUIRED, lambda tokens: tokens[0] == "SG5").with_segments(segment_5, segment_6)
         
         tests = [
             # All as expected
