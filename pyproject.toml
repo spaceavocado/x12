@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "spaceavocado-x12"
-version = "1.0.0"
+version = "1.0.1"
 description = "Simple X12 files parser."
 readme = "README.md"
 authors = [{ name = "David Horak", email = "info@davidhorak.com" }]
@@ -21,3 +21,9 @@ requires-python = ">=3.7"
 
 [project.urls]
 repository = "https://github.com/spaceavocado/x12"
+
+[tool.black]
+line-length = 88
+
+[tool.flake8]
+max-line-length = 88

@@ -1,0 +1,9 @@
+-r requirements.txt
+pip-tools
+pytest
+isort
+flake8
+Flake8-pyproject
+git+https://github.com/psf/black
+build
+twine

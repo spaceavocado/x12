@@ -5,6 +5,7 @@ from x12.parser.context import Context
 from x12.parser.segment import Segment
 from x12.schema.schema import Schema
 
+
 class Loop:
     """X12 Loop object."""
 
@@ -60,22 +61,25 @@ class Loop:
         """Serialize loop into XML."""
 
         res = f'{"  "*self.depth}<LOOP NAME="{self.schema.loop_name}">\n'
-        res += "".join(segment.to_xml(self.depth) for segment in self.segments)
+        res += "".join(segment.to_xml(self.depth + 1) for segment in self.segments)
         res += "".join(loop.to_xml() for loop in self.loops)
         res += f"{'  '*self.depth}</LOOP>\n"
         return res
 
     def __str__(self) -> str:
         return "\n".join(
-            [str(segment) for segment in self.segments] + [str(loop) for loop in self.loops]
+            [str(segment) for segment in self.segments]
+            + [str(loop) for loop in self.loops]
         )
 
     def to_debug(self) -> str:
-        """A helper tool to serialize loop with segment lines with highlighted segment id."""
+        """
+        A helper tool to serialize loop with segment lines with highlighted segment id.
+        """
 
-        prefix = "  "*self.depth
+        prefix = "  " * self.depth
         return "\n".join(
-            [f"<{color_green(self.schema.loop_name)}>:"] +
-            [prefix + segment.to_debug() for segment in self.segments] +
-            [loop.to_debug() for loop in self.loops]
+            [f"<{color_green(self.schema.loop_name)}>:"]
+            + [prefix + segment.to_debug() for segment in self.segments]
+            + [loop.to_debug() for loop in self.loops]
         )
