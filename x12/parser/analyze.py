@@ -2,16 +2,17 @@
 
 from enum import Enum
 from typing import Callable, Tuple
-from x12.common.colors import color_green, color_yellow, color_red, color_cyan
+
+from x12.common.colors import color_cyan, color_green, color_red, color_yellow
 from x12.parser.loop import Loop
 from x12.parser.segment import Segment
-from x12.schema.schema import Schema, Segment as SegmentSchema, Usage
+from x12.schema.schema import Schema
+from x12.schema.schema import Segment as SegmentSchema
+from x12.schema.schema import Usage
 
 
 def find_matching_segment_schema(
-    segment: Segment,
-    schema: Schema,
-    offset: int
+    segment: Segment, schema: Schema, offset: int
 ) -> Tuple[int, Segment] | None:
     """Find position and matching segment schema."""
 
@@ -34,16 +35,21 @@ class SegmentProbe:
     # pylint: disable=too-few-public-methods
     """Segment probe handling printing of the segment/schema subject."""
 
-    def __init__(self, occurrence: Occurrence, subject: Segment | SegmentSchema) -> None:
+    def __init__(
+        self, occurrence: Occurrence, subject: Segment | SegmentSchema
+    ) -> None:
         self.occurrence = occurrence
         self.segment = subject if isinstance(subject, Segment) else None
         self.schema = subject if isinstance(subject, SegmentSchema) else None
 
     def __str__(self) -> str:
-        def print_segment(segment: Segment, highlight: Callable[[str], str] = lambda x: x) -> str:
+        def print_segment(
+            segment: Segment, highlight: Callable[[str], str] = lambda x: x
+        ) -> str:
             separator = segment.context.element_separator
-            return f"{highlight(segment.elements[0])}{separator}" + \
-                separator.join(element for element in segment.elements[1:])
+            return f"{highlight(segment.elements[0])}{separator}" + separator.join(
+                element for element in segment.elements[1:]
+            )
 
         if self.occurrence == Occurrence.EXPECTED:
             return print_segment(self.segment, color_green)
@@ -54,7 +60,10 @@ class SegmentProbe:
 
 
 def analyze(loop: Loop) -> str:
-    """Analyze the parsed loop to determine expected, missing and unexpected segments/loops."""
+    """
+    Analyze the parsed loop to determine expected,
+    missing and unexpected segments/loops.
+    """
 
     def traverse(loop: Loop, expected: bool = True):
         """Traverse recursively the loop."""
@@ -70,31 +79,30 @@ def analyze(loop: Loop) -> str:
                 at_index, segment_schema = found
                 for missing_schema in loop.schema.segments[index:at_index]:
                     if missing_schema.usage == Usage.REQUIRED:
-                        segment_res.append(SegmentProbe(
-                            Occurrence.MISSING, missing_schema))
+                        segment_res.append(
+                            SegmentProbe(Occurrence.MISSING, missing_schema)
+                        )
 
                 segment_res.append(SegmentProbe(Occurrence.EXPECTED, segment))
                 index = at_index + (1 if segment_schema.unique else 0)
             else:
-                segment_res.append(SegmentProbe(
-                    Occurrence.UNEXPECTED, segment))
+                segment_res.append(SegmentProbe(Occurrence.UNEXPECTED, segment))
 
         segment_res += [
             SegmentProbe(Occurrence.MISSING, segment_schema)
-                for segment_schema in loop.schema.segments[index:]
-                if segment_schema.usage == Usage.REQUIRED
+            for segment_schema in loop.schema.segments[index:]
+            if segment_schema.usage == Usage.REQUIRED
         ]
 
         for probe in segment_res:
-            res += "\n" + '  '*(loop.depth+1) + str(probe)
+            res += "\n" + "  " * (loop.depth + 1) + str(probe)
 
         for schema in loop.schema.children:
             loops = loop.find_loops(schema.loop_name)
             for child in loops:
                 res += "\n" + traverse(child, True)
             if len(loops) == 0 and schema.usage == Usage.REQUIRED:
-                res += "\n" + \
-                    f"{'  '*(loop.depth+1)}<{color_red(schema.loop_name)}>"
+                res += "\n" + f"{'  '*(loop.depth+1)}<{color_red(schema.loop_name)}>"
 
         return res
 

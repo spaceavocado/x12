@@ -1,15 +1,16 @@
 """X12 file parser."""
 
 from typing import Tuple
+
 from x12.parser.context import Context
 from x12.parser.loop import Loop
 from x12.schema.schema import Schema
 
 
-def parse (file_path: str, x12: Schema, context: Context = Context("~", "*", ":")):
+def parse(file_path: str, x12: Schema, context: Context = Context("~", "*", ":")):
     """Parse source x12 file with given schema."""
 
-    content = ''
+    content = ""
     try:
         with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
@@ -51,16 +52,21 @@ def parse (file_path: str, x12: Schema, context: Context = Context("~", "*", ":"
 
     return root
 
-def find_child_schema (schema: Schema, tokens: list[str]) -> Schema | None:
-    """Find matching child loop schema by schema predicate for given segment (tokens)."""
+
+def find_child_schema(schema: Schema, tokens: list[str]) -> Schema | None:
+    """
+    Find matching child loop schema by schema predicate for given segment (tokens).
+    """
 
     for node in schema.children:
         if is_matching_loop(node, tokens):
             return node
     return None
 
-def find_parent_loop_schema (schema: Schema, tokens: list[str], loop: Loop) \
-    -> Tuple[Loop, Schema] | None:
+
+def find_parent_loop_schema(
+    schema: Schema, tokens: list[str], loop: Loop
+) -> Tuple[Loop, Schema] | None:
     """
     Find recursively matching parent loop and schema,
     by schema predicate for given segment (tokens).
@@ -74,6 +80,7 @@ def find_parent_loop_schema (schema: Schema, tokens: list[str], loop: Loop) \
             return (loop.parent, node)
 
     return find_parent_loop_schema(schema.parent, tokens, loop.parent)
+
 
 def is_matching_loop(schema: Schema, tokens: list[str]) -> bool:
     """Determine if the schema matches for given segment (tokens)."""

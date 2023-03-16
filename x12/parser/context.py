@@ -2,6 +2,7 @@
 
 """X12 context."""
 
+
 class Context:
     """X12 context object."""
 
@@ -9,7 +10,7 @@ class Context:
         self,
         segment_separator: str,
         element_separator: str,
-        composite_element_separator: str
+        composite_element_separator: str,
     ) -> None:
         self.segment_separator = segment_separator
         self.element_separator = element_separator
