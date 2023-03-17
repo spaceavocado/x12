@@ -1,6 +1,7 @@
 # Space Avocado X12 Parser
 A simple X12 file parser, allowing to parse X12 loops and segment based on schema.
 
+[![codecov](https://codecov.io/gh/spaceavocado/x12/branch/master/graph/badge.svg?token=6EORUDKCVS)](https://codecov.io/gh/spaceavocado/x12)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)​
 
 *Credit: Inspired by [Maven Central X12 Parser](https://github.com/ryanco/x12-parser).*
