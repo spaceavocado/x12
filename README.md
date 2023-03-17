@@ -1,6 +1,8 @@
 # Space Avocado X12 Parser
 A simple X12 file parser, allowing to parse X12 loops and segment based on schema.
 
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)​
+
 *Credit: Inspired by [Maven Central X12 Parser](https://github.com/ryanco/x12-parser).*
 
 > X12 is a message formatting standard used with Electronic Data Interchange (EDI) documents for trading partners to share electronic business documents in an agreed-upon and standard format. It is the most common EDI standard used in the United States.
