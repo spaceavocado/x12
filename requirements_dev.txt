@@ -27,6 +27,8 @@ colorama==0.4.6
     #   build
     #   click
     #   pytest
+coverage[toml]==7.2.2
+    # via pytest-cov
 docutils==0.19
     # via readme-renderer
 exceptiongroup==1.1.1
@@ -87,6 +89,10 @@ pygments==2.14.0
 pyproject-hooks==1.0.0
     # via build
 pytest==7.2.2
+    # via
+    #   -r .\requirements_dev.in
+    #   pytest-cov
+pytest-cov==4.0.0
     # via -r .\requirements_dev.in
 pywin32-ctypes==0.2.0
     # via keyring
@@ -108,6 +114,7 @@ tomli==2.0.1
     # via
     #   black
     #   build
+    #   coverage
     #   flake8-pyproject
     #   pyproject-hooks
     #   pytest
