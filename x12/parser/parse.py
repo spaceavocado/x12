@@ -12,7 +12,7 @@ def parse(file_path: str, x12: Schema, context: Context = Context("~", "*", ":")
 
     content = ""
     try:
-        with open(file_path, "r", encoding="utf-8") as file:
+        with open(file_path, "rt", encoding="utf-8") as file:
             content = file.read()
     except FileNotFoundError:
         print(f"unable to find {file_path}")
@@ -22,7 +22,10 @@ def parse(file_path: str, x12: Schema, context: Context = Context("~", "*", ":")
         raise
 
     # Remove the line-breaks and than split by segment separator to get the lines.
-    lines = content.replace("\r", "").replace("\n", "").split(context.segment_separator)
+    if context.segment_separator != "\n":
+        lines = content.replace("\r", "").replace("\n", "").split(context.segment_separator)
+    else:
+        lines = content.replace("\r", "").split(context.segment_separator)
 
     root = Loop(x12, context)
     head = root
